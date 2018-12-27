@@ -62,8 +62,8 @@ function install_opencv()
             cd ${HOME}/opencv-${VERSION}/
             mkdir -p build
             cd build
-            export CC=/usr/bin/clang
-            export CXX=/usr/bin/clang++
+            export CC=/usr/bin/clang-6.0
+            export CXX=/usr/bin/clang++-6.0
             cmake -D CMAKE_BUILD_TYPE=RELEASE \
                   -D CMAKE_INSTALL_PREFIX=/usr/local \
                   -D INSTALL_PYTHON_EXAMPLES=OFF \
