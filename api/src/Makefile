@@ -1,4 +1,4 @@
-ARCH := $(shell uname -m)
+ARCH := armv7l
 
 NO_RESET ?= no
 NO_BOOT ?= no
@@ -87,7 +87,7 @@ basicinstall: $(OBJDIR)/$(OUT)
 	cp $(OBJDIR)/$(OUT) $(INSTALLDIR)/lib/
 	ln -fs $(OUT) $(INSTALLDIR)/lib/$(LIB_NAME).so
 	cp ../include/mvnc.h $(INSTALLDIR)/include/mvnc2
-	ln -fs $(INSTALLDIR)/include/mvnc2/mvnc.h $(INSTALLDIR)/include/mvnc.h 
+	ln -fs $(INSTALLDIR)/include/mvnc2/mvnc.h $(INSTALLDIR)/include/mvnc.h
 	mkdir -p $(INSTALLDIR)/lib/mvnc
 	cp mvnc/MvNCAPI-*.mvcmd $(INSTALLDIR)/lib/mvnc/
 	mkdir -p ${DESTDIR}/etc/udev/rules.d/

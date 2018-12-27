@@ -28,22 +28,22 @@ function install_opencv()
         exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET update -y"
         exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y lsb-release"
     fi
-    
-    if [[ `lsb_release -d` =~ .*Raspbian.* ]] 
-    then 
+
+    if [[ `lsb_release -d` =~ .*Ubuntu.* ]]
+    then
         echo ""
         echo "************************ Please confirm *******************************"
         echo " Installing OpenCV on Raspberry Pi may take a long time."
         echo " You may skip this part of the installation in which case some examples "
         echo " may not work without modifications but the rest of the SDK will still "
-        echo " be functional. Select n to skip OpenCV installation or y to install it." 
+        echo " be functional. Select n to skip OpenCV installation or y to install it."
         read -p " Continue installing OpenCV (y/n) ? " CONTINUE
         if [[ "$CONTINUE" == "y" || "$CONTINUE" == "Y" ]]; then
-            echo ""; 
-            echo "Installing OpenCV"; 
+            echo "";
+            echo "Installing OpenCV";
             echo "";
             exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET update -y"
-            exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y build-essential cmake pkg-config"
+            exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y build-essential cmake pkg-config clang-6.0"
             exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y libjpeg-dev libtiff5-dev libjasper-dev libpng12-dev"
             exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y libavcodec-dev libavformat-dev libswscale-dev libv4l-dev"
             exec_and_search_errors "$SUDO_PREFIX apt-get $APT_QUIET install -y libxvidcore-dev libx264-dev"
@@ -62,6 +62,8 @@ function install_opencv()
             cd ${HOME}/opencv-${VERSION}/
             mkdir -p build
             cd build
+            export CC=/usr/bin/clang
+            export CXX=/usr/bin/clang++
             cmake -D CMAKE_BUILD_TYPE=RELEASE \
                   -D CMAKE_INSTALL_PREFIX=/usr/local \
                   -D INSTALL_PYTHON_EXAMPLES=OFF \
@@ -82,12 +84,12 @@ function install_opencv()
                     if [ ${MAKE_NJOBS} -gt 1 ] ; then
                         echo "MAKE_NJOBS=${MAKE_NJOBS}, suggestion is increase swap space and edit ncsdk.conf to uncomment #MAKE_NJOBS=1 and try again"
                     else
-                        echo "MAKE_NJOBS=${MAKE_NJOBS}, suggestion is to increase swap space and try again"  
+                        echo "MAKE_NJOBS=${MAKE_NJOBS}, suggestion is to increase swap space and try again"
                     fi
                 fi
                 echo -e "Error on line $LINENO.  Will exit${NC}"
                 exit 1
-            fi            
+            fi
 
             $SUDO_PREFIX make install
             $SUDO_PREFIX ldconfig
@@ -96,7 +98,7 @@ function install_opencv()
             echo "Skipping OpenCV installation based on user input";
             echo "";
         fi
-    else  
+    else
         echo "Installing opencv python for non-Raspbian";
         # check if pip2 & pip3 are available on the system via 'command'
         RC=0
@@ -125,27 +127,27 @@ function install_opencv()
 function main()
 {
     echo "OpenCV Installation Starting"
-    
-    # Test if OpenCV is installed.  If OpenCV is already installed for python, script will exit 
+
+    # Test if OpenCV is installed.  If OpenCV is already installed for python, script will exit
     test_opencv_installed
 
-    
-    ### initialization 
+
+    ### initialization
     # read in functions shared by installer and uninstaller
     source $(dirname "$0")/install-utilities.sh
     # enable trapping for error (function is in install-utilities.sh)
     set_error_handling
     ### get constants (function is in install-utilities.sh)
     initialize_constants
-    ### read config file (function is in install-utilities.sh) 
+    ### read config file (function is in install-utilities.sh)
     read_ncsdk_config
-    # (function is in install-utilities.sh)    
+    # (function is in install-utilities.sh)
     ask_sudo_permissions
 
-    
+
     ### install opencv
     install_opencv
 
-    echo "OpenCV Installation Finished"    
+    echo "OpenCV Installation Finished"
 }
 main

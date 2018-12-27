@@ -5,7 +5,7 @@
 # If download fails and versions mismatch, then existing firmware isn't restored.
 #
 
-# read in functions shared with installer 
+# read in functions shared with installer
 if [ -f ../../install-utilities.sh ] ; then
     source ../../install-utilities.sh
     # function initialize_constants() from install-utilities.sh
@@ -44,7 +44,7 @@ function restore_old_fw()
         echo "Error restoring old firmware - directory ${mvcmd_old_dir} doesn't exist.  Will exit"
         exit 1
     fi
-    
+
     # Remove FW directory if it exists
     [ -d ${mvcmd_dir} ] && rm -rf ${mvcmd_dir}
 
@@ -62,7 +62,7 @@ function restore_old_fw()
             echo "       Not restoring old firmware directory, ${mvcmd_old_dir}.  Will exit"
             exit 1
         fi
-        
+
     else
         echo "Warning: Cannot find NCSDK installed version file ${NCSDK_installed_version_file}."
         mv -f ${mvcmd_old_dir} ${mvcmd_dir}
@@ -73,7 +73,7 @@ function restore_old_fw()
 }
 
 
-# If exists, rename existing FW 
+# If exists, rename existing FW
 [ -d ${mvcmd_old_dir} ] && rm -rf ${mvcmd_old_dir}
 [ -d ${mvcmd_dir} ] && mv -f ${mvcmd_dir} ${mvcmd_old_dir}
 
@@ -94,11 +94,11 @@ fi
 # ncsdk_pkg is the filename without the .tar.gz extension
 ncsdk_pkg=${download_filename%%.tar.gz}
 
-# create mvnc directory 
+# create mvnc directory
 mkdir -p ${mvcmd_dir}
 
 # search for FW in tarball
-ARCH=$(uname -m)
+ARCH=armv7l
 tar -tf ${download_filename} | grep -q "ncsdk-${ARCH}/fw/$"
 if [ $? -ne 0 ] ; then
     echo "Error firmware, ncsdk-${ARCH}/fw/, not found in tar file ${download_filename}.  Will try to restore existing firmware"
